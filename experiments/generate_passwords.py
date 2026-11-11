@@ -13,12 +13,15 @@ def create_folder_and_file():
 
     file_path.touch(exist_ok=True)
 
-def generate():
+
+def generate(seed=42):
+    random.seed(seed)
+
     characters = string.ascii_letters + string.digits + "!@#$%^&*"
 
     generate_one = lambda length: ''.join(random.choice(characters) for i in range(length))
 
-    passwords = [generate_one(random.randint(8, 20)) for _ in range(1000)]
+    passwords = [generate_one(random.randint(8, 20)).encode('utf-8') for _ in range(1000)]
 
     with open(filepath, "w") as f:
         for password in passwords:
