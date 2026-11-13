@@ -38,16 +38,16 @@ pip install -r requirements.txt
 ```
 python run.py
 ```
-* Случайно:
+* Можно выставить свой seed:
 ```
-python --seed 'число' run.py
+python run.py --seed 'число'
 ```
-К примеру:
+* Случайный seed:
 ```
-python --seed 999 run.py
+python run.py --random
 ```
 
-# Experimental research of influence of password-hashing alogorithm on computational cost.
+# Experimental research of impact of password-hashing alogorithms on computational cost.
 ## Description
 This repository contains a term project for the course "Fundamentals of Developing Secure Software and Computer Networks" (project type: analytical-research term project).
 
@@ -87,11 +87,11 @@ pip install -r requirements.txt
 ```
 python run.py
 ```
-* For random:
+* Set a seed:
 ```
-python --seed 'number' run.py
+python run.py --seed 'number'
 ```
-For instance:
+* Random seed:
 ```
-python --seed 999 run.py
+python run.py --random
 ```
