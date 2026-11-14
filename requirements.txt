@@ -1,0 +1,9 @@
+bcrypt
+argon2-cffi
+numpy
+pandas
+matplotlib
+psutil
+nbformat
+nbconvert
+ipykernel
