@@ -19,7 +19,50 @@
 
 Методология экспериментов, описание аппаратной среды и версии используемых библиотек подробно описаны в [methodology.md](experiments/methodology.md).
 ## Результаты
-...
+
+В ходе эксперимента исследовано влияние вычислительных параметров алгоритмов bcrypt, PBKDF2-HMAC-SHA256 и Argon2id на время хеширования паролей. Дополнительно проведено сравнение времени создания и проверки парольных хешей и выполнен статистический анализ разброса измерений.
+
+Для исследования использовался набор из 1000 сгенерированных паролей. Основной эксперимент включал 19 конфигураций алгоритмов, для каждой из которых выполнялось 100 повторных измерений. В качестве основной оценки времени использовалась медиана.
+
+### Влияние параметров на время хеширования
+По результатам эксперимента установлены следующие зависимости:
+
+* bcrypt: увеличение параметра cost с 4 до 12 привело к росту медианного времени хеширования с 0,684 до 168,207 мс (приблизительно в 246 раз), что соответствует экспоненциальному характеру зависимости.
+
+* PBKDF2: увеличение числа итераций с 10 000 до 500 000 привело к росту времени с 2,644 до 132,022 мс (приблизительно в 50 раз). Зависимость близка к линейной.
+
+* Argon2id: увеличение параметра memory_cost с 16 до 128 МиБ привело к росту времени с 8,610 до 61,519 мс (приблизительно в 7,1 раза).
+
+* Argon2id: увеличение параметра time_cost с 1 до 5 при фиксированном объёме памяти 64 МиБ привело к росту времени с 14,170 до 55,652 мс (приблизительно в 3,9 раза).
+
+![Зависимость времени от параметров](images/parameter_plots.png)
+
+### Сравнение времени хеширования и проверки паролей
+
+Для сравнения выбраны следующие конфигурации: bcrypt (cost=12), PBKDF2-HMAC-SHA256 (500 000 итераций) и Argon2id (memory_cost=64 МиБ, time_cost=3, parallelism=4).
+
+| Алгоритм | Хеширование, мс | Проверка, мс |
+ :--- | :---: | ---: |
+| bcrypt | 168.27 | 168.244 |
+| Argon2id | 32.591 | 36.638 |
+| PBKDF | 132.022 | 133.956 |
+
+![Время хеширования и проверки](images/hash_vs_verify.png)
+
+### Статистический анализ
+
+Для оценки стабильности результатов рассчитаны стандартное отклонение, первый и третий квартили (Q1–Q3), а также коэффициент вариации.
+
+Для выбранных конфигураций коэффициент вариации составил:
+
+* bcrypt (cost=12) — 1,28%;
+
+* PBKDF2 (500 000 итераций) — 5,72%;
+
+* Argon2id (64 МиБ, time_cost=3) — 7,41%.
+
+В исследованных условиях наименьший относительный разброс времени наблюдался у bcrypt. Для Argon2id и PBKDF2 колебания времени были более заметными
+
 ## Установка
 1. Склонируйте репозиторий
 ```
@@ -68,7 +111,51 @@ Repository structure:
 
 The experimental methodology, description of the hardware environment and versions of the libraries used are described in detail in [methodology.md](experiments/methodology.md).
 ## Results
-...
+
+The experiment investigated the impact of computational parameters for the bcrypt, PBKDF2-HMAC-SHA256, and Argon2id algorithms on password hashing time. Additionally, the time required to generate and verify password hashes was compared, and a statistical analysis of the variance in measurements was performed.
+
+A set of 1,000 generated passwords was used for the study. The main experiment encompassed 19 algorithm configurations, with 100 repeated measurements conducted for each. The median value was used as the primary metric for time.
+
+### The impact of parameters on hashing time
+
+The experimental results reveal the following relationships:
+
+* bcrypt: increasing the `cost` parameter from 4 to 12 caused the median hashing time to rise from 0.684 ms to 168.207 ms (an increase of approximately 246 times), which corresponds to an exponential relationship.
+
+* PBKDF2: increasing the number of iterations from 10,000 to 500,000 caused the time to rise from 2.644 ms to 132.022 ms (an increase of approximately 50 times). The relationship is nearly linear.
+
+* Argon2id: increasing the `memory_cost` parameter from 16 MiB to 128 MiB caused the time to rise from 8.610 ms to 61.519 ms (an increase of approximately 7.1 times).
+
+* Argon2id: increasing the `time_cost` parameter from 1 to 5, with the memory usage fixed at 64 MiB, caused the time to rise from 14.170 ms to 55.652 ms (an increase of approximately 3.9 times).
+
+![Time-parametes dependence](images/parameter_plots_eng.png)
+
+### Comparison of password hashing and verification times
+
+The following configurations were selected for comparison: bcrypt (cost=12), PBKDF2-HMAC-SHA256 (500,000 iterations), and Argon2id (memory_cost=64 MiB, time_cost=3, parallelism=4).
+
+| Algorithm | Hashing, ms | Verification, ms |
+ :--- | :---: | ---: |
+| bcrypt | 168.27 | 168.244 |
+| Argon2id | 32.591 | 36.638 |
+| PBKDF | 132.022 | 133.956 |
+
+![Hashing and verification times](images/hash_vs_verify_eng.png)
+
+### Statistical analysis
+
+To assess the stability of the results, the standard deviation, the first and third quartiles (Q1–Q3), and the coefficient of variation were calculated.
+
+For the selected configurations, the coefficient of variation was as follows:
+
+* bcrypt (cost=12) — 1.28%;
+
+* PBKDF2 (500,000 iterations) — 5.72%;
+
+* Argon2id (64 MiB, time_cost=3) — 7.41%.
+
+Under the conditions studied, bcrypt exhibited the lowest relative variation in execution time, whereas the fluctuations in time were more pronounced for Argon2id and PBKDF2.
+
 ## Installation
 1. Clone the repository
 ```
